@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 export const IssueDetails = ({issue}) => {
-	const { number, user:{login} } = issue;
+	const { number, user } = issue;
 	return(
 		<DetailsWrapper>
-			{`#${number} opened before hours by ${login}`}
+			{`#${number} opened before hours by ${user?.login}`}
 		</DetailsWrapper>
 
 	);

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { mockIssues } from './mockData';
 import Issue from './Issue';
 import styled from 'styled-components';
 import InfiniteScroll from 'react-infinite-scroller';
@@ -8,41 +7,46 @@ import InfiniteScroll from 'react-infinite-scroller';
 
 
 export const ReactIssues = () => {
-	const [issues, setIssues] = useState(mockIssues.data);
+	const [issues, setIssues] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
-	const loadFunc = () => {	
-		// setHasMore(false);	
-		debugger
-		// setHasMore(true);
+	const [page, setPage] = useState(1);
+	const [hasError, setHasError] = useState(false);
+	const loadFunc = () => {
+		setPage(page+1);	
+		setHasMore(true);
 	};
-	// const fetchIssues = async() => {
-	// 	try {
-	// 		const response = await axios.get('https://api.github.com/repos/facebook/react/issues');
-	// 		console.log('****',response);
-	// 		debugger
-	// 		return response;
-	// 	} catch (error) {
-	// 		console.error(error);
-	// 	}
-	// }   
+	const fetchIssues = async() => {
+		try {
+			const response = await axios.get(`https://api.github.com/repos/facebook/react/issues?page=${page}`);
+			return response;
+		} catch (error) {
+			setHasError(true);
+		}
+	}   
     
-	// useEffect(async() => {
-	// const issues = await fetchIssues();
-	// setIssues(issues.data);
-	// })
+	useEffect(async() => {
+	const newIssues = await fetchIssues();
+	setIssues([...issues, newIssues.data]);
+	setHasMore(false)
+	},[page])
 	return(
 		<InfiniteScroll
 			pageStart={0}
-			loadMore={loadFunc}
+			// loadMore={loadFunc}
 			hasMore={hasMore}
-			loader={<div className="loader" key={0}>Loading ...</div>
+			loader={<div key={0}>Loading ...</div>
 		}
 		>
 			<IssuesWrapper>
-				{issues.map((issue) => {
+				{issues && issues.map((issue) => {
 				return <Issue issue={issue}/>
 				})}
 			</IssuesWrapper>
+			
+			{hasError && 
+				<h1> Error in fetching issues...</h1>
+			}
+		
 		</InfiniteScroll>
 		
 

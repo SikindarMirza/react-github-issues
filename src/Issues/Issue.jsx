@@ -17,7 +17,7 @@ const Issue = ({issue})  => {
                     </a>
                 </TitleWrapper>
                 <LabelWrapper>
-                    {issue.labels.map((label)  => {
+                    {issue?.labels?.map((label)  => {
                         return <IssueLabel label={label}/>
                     })}
                 </LabelWrapper>
