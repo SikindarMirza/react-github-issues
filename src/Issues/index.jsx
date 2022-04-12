@@ -26,7 +26,7 @@ export const ReactIssues = () => {
     
 	useEffect(async() => {
 	const newIssues = await fetchIssues();
-	setIssues([...issues, newIssues.data]);
+	setIssues([...issues, ...newIssues.data]);
 	setHasMore(false)
 	},[page])
 	return(
